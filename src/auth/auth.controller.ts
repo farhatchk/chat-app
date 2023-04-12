@@ -1,15 +1,20 @@
 import { Controller, Get, Inject, Post, Body } from '@nestjs/common';
-import { Routes, Services } from 'src/utils/types';
+import { Routes, Services } from 'src/utils/constants';
 import { IAuthService } from './auth';
 import { CreateUserDto } from './dtos/createUser.dto';
+import { IUserService } from 'src/users/user';
 
 @Controller(Routes.AUTH)
 export class AuthController {
-  constructor(@Inject(Services.AUTH) private authService: IAuthService) {}
+  constructor(
+    @Inject(Services.AUTH) private authService: IAuthService,
+    @Inject(Services.USERS) private userService: IUserService,
+  ) {}
 
   @Post('register')
   registerUser(@Body() createUserDto: CreateUserDto) {
     console.log(createUserDto);
+    this.userService.createUser(createUserDto);
   }
 
   @Post('login')
